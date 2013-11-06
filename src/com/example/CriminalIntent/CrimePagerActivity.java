@@ -38,15 +38,6 @@ public class CrimePagerActivity extends FragmentActivity {
                 return mCrimes.size();
             }
         });
-
-        UUID crimeId = (UUID)getIntent().getSerializableExtra(CrimeListFragment.EXTRA_CRIME_ID);
-        for(int i=0;i<mCrimes.size();i++){
-            if(mCrimes.get(i).getId().equals(crimeId)){
-                Log.d("CrimePagerActivity", crimeId.toString());
-                mViewPager.setCurrentItem(i);
-            }
-            break;
-        }
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             public void onPageScrolled(int i, float v, int i2) {
 
@@ -64,6 +55,14 @@ public class CrimePagerActivity extends FragmentActivity {
             }
         });
 
+        UUID crimeId = (UUID)getIntent().getSerializableExtra(CrimeListFragment.EXTRA_CRIME_ID);
+        Log.d("CrimePagerActivity", crimeId.toString());
+        for(int i=0;i<mCrimes.size();i++){
+            if(mCrimes.get(i).getId().equals(crimeId)){
+                mViewPager.setCurrentItem(i);
+            }
+            break;
+        }
 
     }
 }
