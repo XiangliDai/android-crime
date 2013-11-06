@@ -122,6 +122,11 @@ public class CrimeFragment extends Fragment {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    public void onPause(){
+        super.onPause();
+        CrimeLab.get(getActivity()).saveCrimes();
+    }
     private void updateDate(){
         mDateButton.setText(mCrime.getDate().toString());
     }
