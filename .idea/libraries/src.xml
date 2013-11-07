@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="src">
+    <CLASSES />
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$USER_HOME$/adt-bundle-mac-x86_64-20130917/JakeWharton-ActionBarSherlock-5a15d92/actionbarsherlock/src" />
+      <root url="file://$USER_HOME$/adt-bundle-mac-x86_64-20130917/JakeWharton-ActionBarSherlock-5a15d92/actionbarsherlock/test" />
+    </SOURCES>
+  </library>
+</component>
