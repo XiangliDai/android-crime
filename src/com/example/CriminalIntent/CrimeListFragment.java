@@ -5,12 +5,16 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
+import android.view.ActionMode;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
@@ -45,6 +49,50 @@ public class CrimeListFragment extends ListFragment {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
             if(mSubtitleVisible)
                 getActivity().getActionBar().setSubtitle(R.string.subtitle);
+        }
+        ListView listView = (ListView)v.findViewById(android.R.id.list);
+        //registerForContextMenu(listView);
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) registerForContextMenu(listView);
+        else{
+            listView.setChoiceMode(listView.CHOICE_MODE_MULTIPLE_MODAL);
+            listView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
+                public void onItemCheckedStateChanged(ActionMode actionMode, int i, long l, boolean b) {
+
+                }
+
+                public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+                    MenuInflater inflater1 = actionMode.getMenuInflater();
+                    inflater1.inflate(R.menu.crime_list_item_context, menu);
+                    return true;
+                }
+
+                public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+                    return false;
+                }
+
+                public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
+                    switch (menuItem.getItemId()){
+                        case R.id.menu_item_delete_crime:
+                            CrimeAdapter adapter = (CrimeAdapter)getListAdapter();
+                            CrimeLab crimeLab = CrimeLab.get(getActivity());
+                            for(int i=adapter.getCount()-1; i>= 0; i--){
+                                if(getListView().isItemChecked(i)){
+                                    crimeLab.deleteCrime(adapter.getItem(i));
+                                }
+                            }
+                            actionMode.finish();
+                            adapter.notifyDataSetChanged();
+                            return true;
+                        default:
+                            return false;
+                    }
+
+                }
+
+                public void onDestroyActionMode(ActionMode actionMode) {
+
+                }
+            });
         }
         return  v;
 
@@ -94,6 +142,25 @@ public class CrimeListFragment extends ListFragment {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public boolean onContextItemSelected(MenuItem item){
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+        int position = info.position;
+        CrimeAdapter adapter = (CrimeAdapter)getListAdapter();
+        Crime crime = adapter.getItem(position);
+
+        switch (item.getItemId()){
+            case R.id.menu_item_delete_crime:
+                CrimeLab.get(getActivity()).deleteCrime(crime);
+                adapter.notifyDataSetChanged();
+                return true;
+        }
+        return super.onContextItemSelected(item);
+    }
+
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo){
+        getActivity().getMenuInflater().inflate(R.menu.crime_list_item_context, menu);
     }
 
     private class CrimeAdapter extends ArrayAdapter<Crime>{

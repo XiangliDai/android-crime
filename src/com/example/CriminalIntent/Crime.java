@@ -17,6 +17,7 @@ public class Crime {
     private static final String JSON_TITLE="title";
     private static final String JSON_SOLVED="solved";
     private static final String JSON_DATE="date";
+
     private UUID mId;
     private String mTitle;
     private Date mDate;
